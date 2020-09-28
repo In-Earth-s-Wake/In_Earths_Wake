@@ -137,6 +137,7 @@ public class driver {
 	private static class combat {
         public String combatInput;
         public boolean blocked;
+        public boolean attacked;
     }
 	/* Rooms Dictionary (SO FAR, TENNATIVE)
 	* 0  	-----> 		Knight Intro scene
@@ -607,7 +608,9 @@ public class driver {
 		 *  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 		 * */
 		final combat Combat = new combat();
+		
 		while(user.health>0&&villian.health>0) {
+			
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
@@ -619,11 +622,12 @@ public class driver {
 			print(villian.name+" is using their weapon the "+villian.weapon.name+".");
 			
 			Thread incoming = new Thread() {
+				public Scanner in = new Scanner(System.in);
 				@Override 
 				public void run() {
-					while(!interrupted()) {
+					
 					System.out.println(">");
-					Scanner in = new Scanner(System.in);
+					
 					String i = "";
 					try {
 						sleep(10);
@@ -637,8 +641,12 @@ public class driver {
 					if(i.contains("2")) {
 						Combat.blocked = true;
 					}
-				}
+					if(interrupted()) {
+						in.close();
 					}
+				}
+
+//					
 			};
 			incoming.start();
 			try {
@@ -650,18 +658,55 @@ public class driver {
 			incoming.interrupt();
 			if(Combat.blocked==true) {
 				print("*ATTACK BLOCKED*");
-				//try {
-					//incoming.join();
-				//} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-				//	e.printStackTrace();
-				//}
 			}else {
 			print("*Too Late "+villian.name+" was successful in their attack*");
 				//incoming.interrupt();
 			}
 			user.takenDamage(villian.weapon, villian.damage, Combat.blocked, generateEnemyCrit());
 			print(user.name+ "has "+user.health+"left");
+			print("You manage to create some distance between you and "+ villian.name);
+			
+			Thread outgoing = new Thread() {
+				@Override 
+				public void run() {
+					Combat.attacked = false;
+					System.out.println(">");
+					Scanner ino = new Scanner(System.in);
+					String i = "";
+					//System.out.print(">");
+					i = ino.nextLine();
+					print("beep beep;"+i+"/");
+					if(i.contains("1")) {
+						Combat.attacked = true;
+					}
+					if(interrupted()) {
+						ino.close();
+					}
+				}
+					
+			};
+			outgoing.start();
+			try {
+				Thread.sleep(9000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			outgoing.interrupt();
+			if(Combat.attacked==true) {
+				print("*ATTACK DEALT*");
+			}else {
+			print("*ATTACK MISSED*");
+				//incoming.interrupt();
+			}
+			villian.takenDamage(user.weapon, user.damage, false, generateEnemyCrit());
+			print(villian.name+ "has "+villian.health+"left");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
 			
@@ -674,7 +719,7 @@ public class driver {
 	public static void main(String[] args) {
 		item att = new item("sword","Sword",40.0,15.0,5952);
 		item sheild = new item("sh","Sheild",0.5,50,5952);
-		enemy temp= new enemy("temp", "wee", 44, 40.0, 40.0, 100.0,true,"boss",att,sheild);
+		enemy temp= new enemy("IGOR", "wee", 44, 40.0, 40.0, 100.0,true,"boss",att,sheild);
 		theGirl.sheild =sheild;
 		theGirl.weapon = att;
 		battleEnemy(theGirl,temp);
