@@ -169,7 +169,7 @@ public class driver {
 	static gameCharacter savedChosenCharacter;
 	static gameCharacter chosenCharacter;
 	static gameCharacter theKnight;
-	static gameCharacter theGirl = new gameCharacter("Mivian",gDesc,0, 60.0, 0.4,100.0,false,30,0.9,0.8,0.5,null,null); //new gameCharacter("Mivian",gDesc,60,2,0.8,0.6,100.0,100.0,0.9,0.4,false);
+	static gameCharacter theGirl = new gameCharacter("Mivian",gDesc,0, 60.0, 40.0,100.0,false,30,0.9,0.8,0.5,null,null); //new gameCharacter("Mivian",gDesc,60,2,0.8,0.6,100.0,100.0,0.9,0.4,false);
 	static gameCharacter theMercenary;
 	static gameCharacter theAlchemist;
 	static gameCharacter[] characters= {theKnight,theGirl,theMercenary,theAlchemist};
